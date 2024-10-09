@@ -1,0 +1,130 @@
+.youtube__inner {
+    height: 600px;
+
+    h3 {
+        font-size: 50px;
+        margin-bottom: 20px;
+    }
+
+    p {
+        margin-bottom: 30px;
+        font-size: 22px;
+    }
+
+    a {
+        @include button(#ecaa52, #e7f1ee);
+        border-radius: 30px;
+    }
+
+    .youtube__item {
+        position: absolute;
+        margin-top: 70px;
+        @include flex--between;
+
+        > div {
+            width: 400px;
+            margin-right: 20px;
+
+            img {
+                box-shadow: 1px 3px 3px #000;
+                border-radius: 30px;
+                margin-bottom: 20px;
+                width: 100%;
+                &:hover {
+                    transform: scale(102%);
+                }
+            }
+
+            h3 {
+                font-size: 20px;
+            }
+        }
+    }
+}
+
+#youtuPage {
+    .cont__title {
+        padding: 0;
+
+        h2 {
+            color: #49a85e;
+        }
+    }
+}
+
+.youtube__slider {
+    display: none;
+}
+
+.youtube__search {
+    text-align: center;
+    margin-bottom: 50px;
+
+    input {
+        border: 1px solid #e8ecf2;
+        font-size: 16px;
+        padding: 10px 20px;
+        min-width: 300px;
+        margin-right: 10px;
+        @include border(50px);
+    }
+
+    button {
+        @include button(#bb0000, #e7f1ee);
+        @include border(50px);
+    }
+}
+
+.youtube__tag {
+    ul {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 50px;
+
+        button {
+            background-color: #bb0000;
+            border-radius: 50px;
+            color: #fff;
+            cursor: pointer;
+            width: 100px;
+            padding: 5px 15px;
+            margin-left: 20px;
+            font-size: 14px;
+        }
+    }
+}
+
+.youtube__cont {
+    ul {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        margin-bottom: 100px;
+
+        li {
+            width: 24.333%;
+            margin-bottom: 4%;
+
+            span {
+                display: block;
+                margin: 10px 0;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                -webkit-box-orient: vertical;
+                word-wrap: break-word;
+            }
+
+            img {
+                width: 100%;
+                transition: all 0.3s;
+                border-radius: 5px;
+
+                &:hover {
+                    transform: scale(110%);
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+}

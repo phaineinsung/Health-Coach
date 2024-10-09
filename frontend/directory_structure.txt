@@ -1,0 +1,96 @@
+.
+├── .evn
+├── .gitignore
+├── config-overrides.js
+├── db.js
+├── directory_structure.txt
+├── public
+│   ├── assets
+│   │   └── images
+│   │       ├── footer
+│   │       │   └── sns01.svg
+│   │       ├── intro
+│   │       │   ├── first.jpg
+│   │       │   ├── health.png
+│   │       │   ├── se.jpg
+│   │       │   └── th.jpg
+│   │       ├── slider
+│   │       │   ├── enhanced_image.png
+│   │       │   ├── header_gradient.png
+│   │       │   ├── slide01.png
+│   │       │   ├── slider__left_icon.png
+│   │       │   ├── slider__left_icon_@2x.png
+│   │       │   ├── slider__right_icon.png
+│   │       │   └── slider__right_icon_@2x.png
+│   │       └── youtube
+│   │           ├── y01.png
+│   │           ├── y02.png
+│   │           └── y03.png
+│   ├── favicon.ico
+│   └── index.html
+├── server.js
+├── src
+│   ├── App.js
+│   ├── api
+│   │   └── UserApi.js
+│   ├── assets
+│   │   ├── CustomStyles
+│   │   │   └── CustomStyles.css
+│   │   └── scss
+│   │       ├── common
+│   │       │   └── _commons.scss
+│   │       ├── layout
+│   │       │   ├── footer.scss
+│   │       │   ├── header.scss
+│   │       │   ├── intro.scss
+│   │       │   ├── intromain.scss
+│   │       │   ├── port.scss
+│   │       │   └── youtube.scss
+│   │       ├── setting
+│   │       │   ├── base.scss
+│   │       │   ├── fonts.scss
+│   │       │   └── mixins.scss
+│   │       └── style.scss
+│   ├── components
+│   │   ├── ScrollToTop.js
+│   │   ├── home section
+│   │   │   ├── Intro.jsx
+│   │   │   ├── Port.jsx
+│   │   │   ├── Youtube.jsx
+│   │   │   └── header.jsx
+│   │   ├── intro
+│   │   │   └── Intro.jsx
+│   │   ├── layout
+│   │   │   ├── ContTitle.jsx
+│   │   │   ├── Contents.jsx
+│   │   │   ├── Footer.jsx
+│   │   │   └── Layout.jsx
+│   │   └── login
+│   │       └── login.jsx
+│   ├── index.js
+│   └── pages
+│       ├── AddRecordPage.jsx
+│       ├── Community.jsx
+│       ├── FavoritesPage.jsx
+│       ├── Home.jsx
+│       ├── IntroPage.jsx
+│       ├── Login.jsx
+│       ├── MyPage.jsx
+│       ├── PostDetail.jsx
+│       ├── PostForm.jsx
+│       └── Register.jsx
+└── uploads
+    ├── 1721882715552-enhanced_image.png
+    ├── 1721883276191-enhanced_image.png
+    ├── 1721959518827-enhanced_image.png
+    ├── 1721963873072-image 1.png
+    ├── 1721964105034-image 2.png
+    ├── 1721964358371-image 3.png
+    ├── 1721964406209-image 4.png
+    ├── 1721964435776-image 5.png
+    ├── 1721964463182-image 6.png
+    ├── 1722231828743-image 2.png
+    ├── 1722231835190-image 2.png
+    └── 1722231840665-image 2.png
+
+22 directories, 71 files

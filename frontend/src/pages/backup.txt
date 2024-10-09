@@ -1,0 +1,143 @@
+import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import axios from 'axios';
+import { TextField, Button, Container, Typography, Box, Avatar, CssBaseline } from '@mui/material';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
+
+// 테마 생성
+const theme = createTheme();
+
+// 스타일이 적용된 버튼 컴포넌트
+const StyledButton = styled(Button)({
+  borderRadius: '20px',
+  padding: '0.5rem 1rem',
+  textTransform: 'none',
+});
+
+const Login = () => {
+  const navigate = useNavigate(); // 페이지 이동을 위한 훅
+  const [email, setEmail] = useState(''); // 이메일 상태 관리
+  const [pw, setPw] = useState(''); // 비밀번호 상태 관리
+  const [loginError, setLoginError] = useState(''); // 로그인 오류 메시지 상태 관리
+
+  // 폼 제출 핸들러
+  const handleSubmit = async (event) => {
+    event.preventDefault(); // 폼 기본 제출 동작 방지
+    try {
+      // 로그인 요청
+      const response = await axios.post('http://localhost:8080/users/login', { email, pw });
+      console.log('Login response:', response); // 응답 로그 출력
+
+      // 응답에서 token과 accessToken이 존재하는지 확인하여
+      // 토큰이 제대로 발급되었는지 확인
+      // 사용자 정보(user)도 받아왔는지 확인
+      if (response.data.token && response.data.token.accessToken && response.data.user) {
+        // accessToken 및 refreshToken 저장
+        localStorage.setItem('accessToken', response.data.token.accessToken);
+        localStorage.setItem('refreshToken', response.data.token.refreshToken);
+        
+        // 저장된 값 로그 출력
+        console.log('accessToken:', localStorage.getItem('accessToken'));
+        console.log('refreshToken:', localStorage.getItem('refreshToken'));
+
+        window.dispatchEvent(new Event('storage')); // 추가된 코드
+        navigate('/mypage');
+        window.location.reload(); // 새로고침 추가
+        
+        // 현재 사용자 정보 구성
+        // 사용자 정보는 response.data.user 에 저장되어 있다.
+        const currentUser = {
+          user_num: response.data.user.user_num,
+          email: response.data.user.email,
+          name: response.data.user.name // 서버 응답에서 이름 가져오기
+        };
+        localStorage.setItem('currentUser', JSON.stringify(currentUser)); // 사용자 정보 저장
+        localStorage.setItem('isLoggedIn', 'true');
+        
+        // 저장된 사용자 정보 로그 출력
+        console.log('currentUser:', localStorage.getItem('currentUser'));
+        console.log('isLoggedIn:', localStorage.getItem('isLoggedIn'));
+
+        navigate('/mypage'); // 마이페이지로 이동
+      } else {
+        setLoginError('로그인에 실패하였습니다. 이메일이나 비밀번호를 확인해 주세요.');
+      }
+    } catch (error) {
+      console.error('Login failed', error);
+      console.log('Error details:', error.response); // 오류 상세 정보 로그 출력
+      if (error.response && error.response.status === 403) {
+        setLoginError('접근 권한이 없습니다. 이메일이나 비밀번호를 확인해 주세요.');
+      } else {
+        setLoginError('로그인에 실패하였습니다. 다시 시도해 주세요.');
+      }
+    }
+  };
+
+  return (
+    <ThemeProvider theme={theme}>
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <Box
+          sx={{
+            marginTop: 8,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }} />
+          <Typography component="h1" variant="h5">
+            Login
+          </Typography>
+          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="Email Address"
+              name="email"
+              autoComplete="email"
+              autoFocus
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="pw"
+              label="Password"
+              type="password"
+              id="pw"
+              autoComplete="current-password"
+              value={pw}
+              onChange={(e) => setPw(e.target.value)}
+            />
+            <StyledButton
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Sign In
+            </StyledButton>
+            {loginError && <Typography color="error">{loginError}</Typography>}
+            <Button
+              component={Link}
+              to="/register"
+              fullWidth
+              variant="outlined"
+              sx={{ mt: 2, mb: 3 }}
+            >
+              회원가입
+            </Button>
+          </Box>
+        </Box>
+      </Container>
+    </ThemeProvider>
+  );
+};
+
+export default Login;

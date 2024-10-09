@@ -1,0 +1,67 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.3.1'
+	id 'io.spring.dependency-management' version '1.1.5'
+}
+
+group = 'com.team'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17)
+	}
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	compileOnly 'org.projectlombok:lombok'
+//	runtimeOnly 'com.h2database:h2'
+
+	//MySQL JDBC Driver
+	runtimeOnly 'mysql:mysql-connector-java:8.0.28'
+	//Spring Data JPA
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+	//JWT
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+	implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
+	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+	// 스프링 시큐리티를 사용하기 위한 스타터 추가
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	// 타임리프에서 스프링 시큐리티를 사용하기 위한 의존성 추가
+	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+	// 스프링 시큐리티를 테스트하기 위한 의존성 추가
+	testImplementation 'org.springframework.security:spring-security-test'
+
+	// for Object Storage : 아파치 httpclient 의존성 주입
+	implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: '5.3.1'
+
+	//java의 JSON파싱 기능을 이용하기 위한 의존성 주입
+	// https://mvnrepository.com/artifact/org.json/json
+	implementation group: 'org.json', name: 'json', version: '20240303'
+
+	//Redis 사용을 위한 의존성 주입
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}

@@ -1,0 +1,98 @@
+body {
+    background: linear-gradient(to bottom, #5c97c3, #e29ca6); /* 그라데이션 배경 설정 */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    color: white;
+    overflow-x: hidden; /* 가로 스크롤 제거 */
+}
+
+/* 카드 스타일 */
+.custom-card {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    opacity: 0; /* 초기 상태를 투명하게 설정 */
+    animation: fadeInUp 0.5s forwards; /* 나타나는 애니메이션 적용 */
+    animation-delay: var(--delay); /* 애니메이션 딜레이 설정 */
+}
+
+.custom-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.custom-card-content {
+    color: #fff;
+}
+
+.custom-card-actions {
+    justify-content: space-between;
+}
+
+/* 스크롤 컨테이너 스타일 */
+.scroll-container {
+    background: linear-gradient(to bottom, #5c97c3, #e29ca6); /* 동일한 그라데이션 배경 설정 */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    overflow-y: auto; /* 세로 스크롤 활성화 */
+    padding-right: 15px; /* 스크롤 바가 내용과 겹치지 않도록 패딩 추가 */
+    box-sizing: border-box; /* 패딩 포함 박스 사이징 */
+}
+
+/* 스크롤 바 숨기기 */
+.scroll-container::-webkit-scrollbar {
+    display: none; /* 웹킷 브라우저에서 스크롤 바 숨기기 */
+}
+.scroll-container {
+    -ms-overflow-style: none;  /* IE and Edge에서 스크롤 바 숨기기 */
+    scrollbar-width: none;  /* Firefox에서 스크롤 바 숨기기 */
+}
+
+.pagination {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    justify-content: center;
+    margin: 20px 0;
+  }
+  
+  .page-item {
+    margin: 0 5px;
+  }
+  
+  .page-link {
+    padding: 8px 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    text-decoration: none;
+    color: #333;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  .page-link:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .active .page-link {
+    background-color: #3f51b5;
+    color: white;
+    border: 1px solid #3f51b5;
+  }
+
+/* 나타나는 애니메이션 정의 */
+@keyframes fadeInUp {
+    from {
+        transform: translate3d(100%, 100%, 0); /* 오른쪽 아래에서 시작 */
+        opacity: 0;
+    }
+    to {
+        transform: translate3d(0, 0, 0);
+        opacity: 1;
+    }
+}

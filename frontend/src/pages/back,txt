@@ -1,0 +1,228 @@
+import React, { useState, useEffect } from 'react';
+import { Container, Typography, Box, TextField, Button, Input, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import { useNavigate, useParams, Link } from 'react-router-dom';
+import Layout from '../layout/Layout.jsx';
+import axios from 'axios';
+
+const PostForm = () => {
+  const { post_id } = useParams(); // Use post_id
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
+  const [categoryId, setCategoryId] = useState('');
+  const [categories, setCategories] = useState([]);
+  const [image, setImage] = useState(null);
+  const [existingImage, setExistingImage] = useState(null);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const navigate = useNavigate();
+  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+  const userId = currentUser?.user_num;
+  const token = localStorage.getItem('token'); // JWT 토큰을 가져옴
+  const baseURL = process.env.REACT_APP_BASE_URL || 'http://localhost:8080';
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Fetch all categories
+        const categoriesResponse = await axios.get(`${baseURL}/ctg_post`, {
+          headers: {
+            Authorization: `Bearer ${token}`, // 헤더에 토큰 추가
+          },
+        });
+        setCategories(categoriesResponse.data);
+
+        if (post_id) {
+          // Fetch post details
+          const postResponse = await axios.get(`${baseURL}/posts/${post_id}`, {
+            headers: {
+              Authorization: `Bearer ${token}`, // 헤더에 토큰 추가
+            },
+          });
+          const post = postResponse.data;
+          setTitle(post.title);
+          setContent(post.content);
+          setExistingImage(post.image);
+
+          // Set the category ID from the post
+          setCategoryId(post.ctgId);
+
+          // Find the category name based on the post's category ID
+          const selectedCategory = categoriesResponse.data.find(category => category.ctgId === post.ctgId);
+          if (selectedCategory) {
+            setSelectedCategory(selectedCategory.ctgName);
+          }
+        } else {
+          // For a new post, reset the category selection
+          setSelectedCategory('');
+        }
+
+        setLoading(false);
+      } catch (err) {
+        console.error('Failed to fetch data:', err);
+        setError('데이터를 가져오는 중 오류가 발생했습니다.');
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [post_id, baseURL, token]);
+
+  const handleSubmit = () => {
+    const message = post_id ? '수정을 하시겠습니까?' : '작성을 하시겠습니까?';
+    if (!window.confirm(message)) return;
+
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('content', content);
+    formData.append('authorId', userId);
+    formData.append('categoryId', categoryId);
+    if (image) {
+      formData.append('image', image);
+    } else if (existingImage) {
+      formData.append('existingImage', existingImage);
+    }
+
+    const config = {
+      headers: {
+        'content-type': 'multipart/form-data',
+        Authorization: `Bearer ${token}`, // 헤더에 토큰 추가
+      },
+    };
+
+    const request = post_id
+      ? axios.put(`${baseURL}/posts/${post_id}`, formData, config)
+      : axios.post(`${baseURL}/posts`, formData, config);
+
+    request
+      .then(() => {
+        navigate('/community');
+      })
+      .catch(error => {
+        console.error(post_id ? 'Failed to update post:' : 'Failed to create post:', error);
+        setError(post_id ? '게시물을 수정하는 중 오류가 발생했습니다.' : '게시물을 작성하는 중 오류가 발생했습니다.');
+      });
+  };
+
+  const handleImageChange = (e) => {
+    setImage(e.target.files[0]);
+    setExistingImage(null);
+  };
+
+  if (loading) {
+    return (
+      <Layout>
+        <Container>
+          <Box sx={{ mt: 4 }}>
+            <Typography variant="h4" gutterBottom sx={{ color: '#fff' }}>
+              로딩 중...
+            </Typography>
+          </Box>
+        </Container>
+      </Layout>
+    );
+  }
+
+  return (
+    <Layout>
+      <Container>
+        <Box sx={{ mt: 4 }}>
+          <Typography variant="h4" gutterBottom sx={{ color: '#fff' }}>
+            {post_id ? '글 수정' : '글 작성'}
+          </Typography>
+          <TextField
+            label="제목"
+            fullWidth
+            variant="outlined"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            sx={{ mb: 2, backgroundColor: 'rgba(255, 255, 255, 0.2)', borderRadius: '10px', '& .MuiOutlinedInput-root': { '& fieldset': { borderColor: 'transparent' }, '&:hover fieldset': { borderColor: 'transparent' }, '&.Mui-focused fieldset': { borderColor: 'transparent' } }, '& .MuiInputBase-input': { color: '#fff' }, '& .MuiInputLabel-root': { color: 'rgba(255, 255, 255, 0.5)' }, '& .MuiInputLabel-root.Mui-focused': { color: '#fff' } }}
+          />
+          <TextField
+            label="내용"
+            fullWidth
+            variant="outlined"
+            multiline
+            rows={4}
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            sx={{ mb: 2, backgroundColor: 'rgba(255, 255, 255, 0.2)', borderRadius: '10px', '& .MuiOutlinedInput-root': { '& fieldset': { borderColor: 'transparent' }, '&:hover fieldset': { borderColor: 'transparent' }, '&.Mui-focused fieldset': { borderColor: 'transparent' } }, '& .MuiInputBase-input': { color: '#fff' }, '& .MuiInputLabel-root': { color: 'rgba(255, 255, 255, 0.5)' }, '& .MuiInputLabel-root.Mui-focused': { color: '#fff' } }}
+          />
+          <FormControl fullWidth sx={{ mb: 2 }}>
+            <InputLabel id="category-label" sx={{ color: 'rgba(255, 255, 255, 0.5)', '&.Mui-focused': { color: '#fff' } }}>카테고리</InputLabel>
+            <Select
+              labelId="category-label"
+              value={categoryId}
+              onChange={(e) => setCategoryId(e.target.value)}
+              sx={{ backgroundColor: 'rgba(255, 255, 255, 0.2)', borderRadius: '10px', '& .MuiSelect-icon': { color: '#fff' }, '& .MuiOutlinedInput-notchedOutline': { borderColor: 'transparent' }, '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'transparent' }, '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: 'transparent' } }}
+            >
+              {categories.map(category => (
+                <MenuItem key={category.ctgId} value={category.ctgId}>
+                  {category.ctgName}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          {existingImage && (
+            <Box sx={{ mb: 2 }}>
+              <Typography variant="body1" gutterBottom sx={{ color: '#fff' }}>
+                기존 이미지:
+              </Typography>
+              <img src={`http://localhost:3001${existingImage}`} alt="Existing" style={{ width: '100%', height: 'auto', borderRadius: '10px' }} />
+            </Box>
+          )}
+          <Input
+            type="file"
+            onChange={handleImageChange}
+            sx={{ mb: 2, color: '#fff' }}
+          />
+          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Button
+              variant="contained"
+              onClick={handleSubmit}
+              sx={{
+                borderColor: '#fff',
+                color: '#fff',
+                borderRadius: '20px',
+                padding: '0.5rem 1rem',
+                textTransform: 'none',
+                marginRight: '1rem',
+                '&:hover': {
+                  backgroundColor: '#fff',
+                  color: 'gold',
+                }
+              }}
+            >
+              {post_id ? '수정하기' : '작성하기'}
+            </Button>
+            <Button
+              component={Link}
+              to="/community"
+              variant="contained"
+              sx={{
+                borderColor: '#fff',
+                color: '#fff',
+                borderRadius: '20px',
+                padding: '0.5rem 1rem',
+                textTransform: 'none',
+                '&:hover': {
+                  backgroundColor: '#fff',
+                  color: 'gold',
+                }
+              }}
+            >
+              취소
+            </Button>
+          </Box>
+          {error && (
+            <Typography color="error" sx={{ mt: 2 }}>
+              {error}
+            </Typography>
+          )}
+        </Box>
+      </Container>
+    </Layout>
+  );
+};
+
+export default PostForm;

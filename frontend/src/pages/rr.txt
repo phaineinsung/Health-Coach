@@ -1,0 +1,78 @@
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams, Link } from 'react-router-dom';
+import axios from 'axios';
+import { Box, TextField, Button, Grid, MenuItem, Typography } from '@mui/material';
+
+const AddRecordPage = () => {
+  const { recordId } = useParams(); // Only recordId is fetched from the URL parameters
+  const navigate = useNavigate();
+  const [exerciseList, setExerciseList] = useState([]);
+  const [newRecord, setNewRecord] = useState({
+    ex_name: '',
+    ex_date: '',
+    ex_time: '',
+  });
+
+  useEffect(() => {
+    axios
+      .get('http://localhost:8080/ctg_exercise')
+      .then((response) => {
+        console.log('Fetched exercises:', response.data);
+        setExerciseList(response.data || []);
+      })
+      .catch((error) => {
+        console.error('운동 목록을 가져오는 중 오류 발생:', error);
+      });
+
+    // 특정 기록을 수정하는 경우 (recordId가 존재하면)
+    if (recordId) {
+      axios
+        .get(`http://localhost:8080/records/${recordId}`)
+        .then((response) => {
+          setNewRecord(response.data);
+        })
+        .catch((error) => {
+          console.error('기록을 가져오는 중 오류 발생:', error);
+        });
+    }
+  }, [recordId]);
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setNewRecord((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const handleAddRecord = () => {
+    const selectedExercise = exerciseList.find((e) => e.ctg_name === newRecord.ex_name);
+
+    if (!selectedExercise) {
+      console.error('운동을 찾을 수 없습니다:', newRecord.ex_name);
+      return;
+    }
+
+    // Retrieve currentUser from localStorage
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (!currentUser || !currentUser.user_num) {
+      console.error('User ID not found in currentUser.');
+      return;
+    }
+
+    const recordToAdd = {
+      user_num: currentUser.userId, // Access userId from currentUser
+      ex_id: selectedExercise.ctg_id,
+      ex_date: newRecord.ex_date,
+      ex_time: newRecord.ex_time,
+    };
+
+    axios
+      .post(`http://localhost:8080/mypage/${recordToAdd.user_num}/records`, recordToAdd)
+      .then((response) => {
+        navigate('/mypage');
+      })
+      .catch((error) => {
+        console.error('운동 기록을 추가하는 중 오류 발생:', error);
+      });
+  };

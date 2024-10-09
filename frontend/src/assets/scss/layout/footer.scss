@@ -1,0 +1,108 @@
+.footer__inner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    background: transparent; /* 배경색을 투명하게 설정 */
+    
+    @media (max-width: 768px) {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .footer__text {
+        width: 20%;
+        background: transparent; /* 배경색을 투명하게 설정 */
+
+        @media (max-width: 768px) {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        h5 {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 16px;
+            color: #808080;
+        }
+
+        .sns {
+            li {
+                display: inline;
+                a {
+                    display: inline-block;
+                    width: 45px;
+                    height: 45px;
+                    border-radius: 50%;
+                    background-color: #fff;
+                    background-image: url('../../../../public/assets/images/footer/sns01.svg');
+
+
+                }
+
+                &:nth-child(2) a {
+                    background-position: -45px 0;
+                }
+
+                &:nth-child(3) a {
+                    background-position: -90px 0;
+                }
+
+                &:nth-child(4) a {
+                    background-position: -135px 0;
+                }
+            }
+        }
+    }
+
+    .footer__menu {
+        width: 70%;
+        display: flex;
+        background: transparent; /* 배경색을 투명하게 설정 */
+
+        @media (max-width: 768px) {
+            width: 100%;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        > div {
+            width: 25%;
+
+            @media (max-width: 768px) {
+                width: 100%;
+                margin-bottom: 20px;
+            }
+
+            h4 {
+                font-size: 18px;
+                color: #000;
+                margin-bottom: 20px;
+            }
+
+            a {
+                font-size: 14px;
+                color: #808080;
+                line-height: 1.8;
+            }
+        }
+    }
+
+    .footer__right {
+        width: 100%;
+        padding: 30px;
+        text-align: center;
+        border-top: 1px solid #E5E5E5;
+        margin-top: 50px;
+        color: #808080;
+        font-size: 14px;
+        background: transparent; /* 배경색을 투명하게 설정 */
+    }
+}
+
+/* 새로운 클래스 추가 */
+.footer-background {
+    background: transparent; /* 배경색을 투명하게 설정 */
+}
